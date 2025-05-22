@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Funcionários</title>
+
+    <link rel="stylesheet" href="./style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
+</head>
+<body>
+
+<div class="container">
+    <h1>Cadastro de Funcionários</h1>
+
+    <form id="employeeForm">
+        <input type="hidden" id="employeeId"> <!-- Oculto: usado ao editar -->
+
+        <label for="name">Nome:</label>
+        <input type="text" id="name" name="name" required>
+
+        <label for="gender">Gênero:</label>
+        <input type="text" id="gender" name="gender" required>
+
+        <label for="department">Departamento:</label>
+        <input type="text" id="department" name="department" required>
+
+        <button type="submit">Salvar</button>
+    </form>
+
+    <div id="alertMessage" class="alert" style="display: none;"></div>
+
+    <hr style="margin: 20px 0;">
+
+    <h2>Funcionários Cadastrados</h2>
+    <table id="employeeTable" style="width:100%; margin-top:10px;">
+        <thead>
+        <tr>
+            <th>Nome</th>
+            <th>Gênero</th>
+            <th>Departamento</th>
+            <th>Ações</th>
+        </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+<script>
+    const apiURL = 'http://localhost:8080/employees';
+
+    function carregarFuncionarios() {
+        axios.get(apiURL)
+            .then(response => {
+                const tbody = document.querySelector('#employeeTable tbody');
+                tbody.innerHTML = '';
+
+                response.data.forEach(employee => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${employee.name}</td>
+                        <td>${employee.gender}</td>
+                        <td>${employee.department}</td>
+                        <td>
+                            <button onclick="editarFuncionario(${employee.id}, '${employee.name}', '${employee.gender}', '${employee.department}')">Editar</button>
+                            <button onclick="excluirFuncionario(${employee.id})" style="margin-left: 10px; background-color: #e74c3c;">Excluir</button>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            });
+    }
+
+    function editarFuncionario(id, name, gender, department) {
+        document.getElementById('employeeId').value = id;
+        document.getElementById('name').value = name;
+        document.getElementById('gender').value = gender;
+        document.getElementById('department').value = department;
+    }
+
+    function excluirFuncionario(id) {
+        if (confirm("Tem certeza que deseja excluir este funcionário?")) {
+            axios.delete(`${apiURL}/${id}`)
+                .then(() => {
+                    mostrarMensagem('Funcionário excluído com sucesso!');
+                    carregarFuncionarios();
+                })
+                .catch(() => {
+                    mostrarMensagem('Erro ao excluir funcionário!');
+                });
+        }
+    }
+
+    function mostrarMensagem(msg) {
+        const alertDiv = document.getElementById('alertMessage');
+        alertDiv.textContent = msg;
+        alertDiv.style.display = 'block';
+        setTimeout(() => alertDiv.style.display = 'none', 3000);
+    }
+
+    document.getElementById('employeeForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const id = document.getElementById('employeeId').value;
+        const name = document.getElementById('name').value;
+        const gender = document.getElementById('gender').value;
+        const department = document.getElementById('department').value;
+
+        const employeeData = { name, gender, department };
+
+        if (id) {
+            // Atualizar
+            axios.put(`${apiURL}/${id}`, employeeData)
+                .then(() => {
+                    mostrarMensagem('Funcionário atualizado com sucesso!');
+                    document.getElementById('employeeForm').reset();
+                    document.getElementById('employeeId').value = '';
+                    carregarFuncionarios();
+                })
+                .catch(() => mostrarMensagem('Erro ao atualizar funcionário!'));
+        } else {
+            // Criar
+            axios.post(apiURL, employeeData)
+                .then(() => {
+                    mostrarMensagem('Funcionário cadastrado com sucesso!');
+                    document.getElementById('employeeForm').reset();
+                    carregarFuncionarios();
+                })
+                .catch(() => mostrarMensagem('Erro ao cadastrar funcionário!'));
+        }
+    });
+
+    // Inicializa a tabela ao carregar a página
+    carregarFuncionarios();
+</script>
+
+</body>
+</html>
