@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Funcionários</title>
+
+    <!-- Link para o CSS minimalista -->
+    <link rel="stylesheet" href="./style.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
+</head>
+<body>
+
+<div class="container">
+    <h1>Cadastro de Funcionários</h1>
+
+    <form id="employeeForm">
+        <label for="name">Nome:</label>
+        <input type="text" id="name" name="name" required>
+
+        <label for="gender">Gênero:</label>
+        <input type="text" id="gender" name="gender" required>
+
+        <label for="department">Departamento:</label>
+        <input type="text" id="department" name="department" required>
+
+        <button type="submit">Cadastrar</button>
+    </form>
+
+    <!-- Área para mensagens de sucesso -->
+    <div id="alertMessage" class="alert" style="display: none;"></div>
+</div>
+
+<script>
+    document.getElementById('employeeForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Evita o comportamento padrão de envio do formulário
+
+        // Captura os valores dos inputs
+        const name = document.getElementById('name').value;
+        const gender = document.getElementById('gender').value;
+        const department = document.getElementById('department').value;
+
+        // Cria o objeto do funcionário a ser enviado para a API
+        const employeeData = {
+            name: name,
+            gender: gender,
+            department: department
+        };
+
+        // Envia os dados para a API usando Axios
+        axios.post('http://localhost:8080/employees', employeeData)
+            .then(response => {
+                document.getElementById('alertMessage').textContent = 'Funcionário cadastrado com sucesso!';
+                document.getElementById('alertMessage').style.display = 'block';
+                document.getElementById('employeeForm').reset(); // Limpa o formulário
+            })
+            .catch(error => {
+                console.error('Houve um erro!', error);
+                document.getElementById('alertMessage').textContent = 'Erro ao cadastrar funcionário!';
+                document.getElementById('alertMessage').style.display = 'block';
+            });
+    });
+</script>
+
+</body>
+</html>

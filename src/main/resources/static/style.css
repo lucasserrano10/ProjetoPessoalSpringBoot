@@ -1,0 +1,81 @@
+/* Reset básico para garantir que o layout fique consistente entre os navegadores */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Corpo da página */
+body {
+    font-family: Arial, sans-serif; /* Fonte limpa e moderna */
+    background-color: #f4f4f4; /* Cor de fundo suave */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+/* Contêiner do formulário */
+.container {
+    background-color: #fff; /* Cor de fundo do formulário */
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    width: 100%;
+    max-width: 400px; /* Largura máxima do formulário */
+}
+
+/* Título */
+h1 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Estilo dos labels */
+label {
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 5px;
+    display: block;
+}
+
+/* Estilo dos campos de input */
+input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    color: #333;
+}
+
+/* Estilo do botão */
+button {
+    width: 100%;
+    padding: 10px;
+    background-color: #4CAF50; /* Cor verde suave */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049; /* Cor um pouco mais escura no hover */
+}
+
+/* Estilo para quando o formulário for enviado */
+.alert {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #dff0d8; /* Cor de fundo verde claro para sucesso */
+    border-radius: 5px;
+    color: #3c763d;
+    font-size: 16px;
+    text-align: center;
+}
